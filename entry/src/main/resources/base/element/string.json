@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "The module containing an ability showcasing all HarmonyOS Symbols in a chaotic manner."
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "A meowy application showcasing all HarmonyOS Symbols in a chaotic manner."
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Symbolu"
+    }
+  ]
+}

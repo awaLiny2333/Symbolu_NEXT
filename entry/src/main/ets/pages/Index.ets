@@ -12,20 +12,18 @@ struct Index {
   // UI
   @State inputText: string = "";
   @State symbolTest: Resource = $r('sys.symbol.camera_slash_fill');
-  @State selected: number = 0;
+  @State selected: linysSymbol = allSymbols[0];
   // Data
   data: LinysSymbolDataSource = new LinysSymbolDataSource(allSymbols);
 
   build() {
     Column({ space: 10 }) {
       WaterFlow() {
-        LazyForEach(this.data, (s: linysSymbol, idx: number) => {
+        LazyForEach(this.data, (s: linysSymbol) => {
           LinysSymbolDisplay({
-            symbol: s
+            symbol: s,
+            selected: this.selected
           })
-            .onClick(() => {
-              this.selected = idx;
-            })
         }, (s: linysSymbol) => {
           return s.unicode;
         })
@@ -39,27 +37,35 @@ struct Index {
       .scrollBar(BarState.On)
 
       Row({ space: 10 }) {
-        // Blank()
-        LinysCapsuleButton({ text: "No. " + this.selected.toString() })
-        Blank()
-        LinysCapsuleButton({ text: " " + allSymbols[this.selected].char + " ", fontSize: 26 })
-        LinysCapsuleButton({ text: allSymbols[this.selected].unicode })
-        LinysCapsuleButton({ text: allSymbols[this.selected].name })
-        // Blank()
-        // LinysCapsuleButton({ text: " 󰆝 ", fontSize: 26, allowCopy: false })
+        Row() {
+          LinysCapsuleButton({ text: "No. " + this.selected.id.toString() })
+        }.layoutWeight(1)
+
+        LinysCapsuleButton({ text: " " + this.selected.char + " ", fontSize: 26 })
+        LinysCapsuleButton({ text: this.selected.unicode })
+        LinysCapsuleButton({ text: this.selected.name })
       } // Operations
       .width('100%')
 
-      TextInput({ text: this.inputText })// Search Blank
-        .onChange((newText) => {
-          this.inputText = newText;
-        })
-        .onSubmit(() => {
-          this.searchFor(this.inputText);
-        })
+      Row({ space: 10 }) {
+        TextInput({ text: this.inputText })// Search Blank
+          .layoutWeight(1)
+          .onChange((newText) => {
+            this.inputText = newText;
+          })
+          .onSubmit(() => {
+            this.searchFor(this.inputText);
+          })
+        SymbolGlyph($r('sys.symbol.arrow_counterclockwise'))// Reset Button
+          .fontColor([$r('app.color.font_color_title')])
+          .fontSize(36)
+          .onClick(() => {
+            this.inputText = '';
+            this.searchFor('');
+          })
+      }
     }
-    // .backgroundColor($r('app.color.start_window_background'))
-    .padding({ left: 20, right: 20 })
+    .padding({ left: 20, right: 20, top: 10 })
     .height('100%')
     .width('100%')
     .onAreaChange((o, n) => {
@@ -69,6 +75,14 @@ struct Index {
 
   searchFor(key: string) {
     console.log('[Woof]Searching for key: ' + key);
+    let searchResult: linysSymbol[] = [];
+    for (let index = 0; index < allSymbols.length; index++) {
+      const element = allSymbols[index];
+      if (element.name.includes(key)) {
+        searchResult.push(element);
+      }
+    }
+    this.data.setData(searchResult);
   }
 
   on_main_area_change(_old: Area, n: Area) {
@@ -81,19 +95,28 @@ struct Index {
 @Component
 struct LinysSymbolDisplay {
   @Prop symbol: linysSymbol;
+  @Link selected: linysSymbol;
   // Colors
   @Prop colors: ResourceColor = $r('app.color.font_color_title');
   @Prop fontWeight: FontWeight = FontWeight.Normal;
 
   build() {
-    Text(this.symbol.char)
-      .width(50)
-      .height(50)
-      .fontWeight(this.fontWeight)
-      .fontSize(50)
-      .fontColor($r('app.color.font_color_title'))
-      .clickEffect({ level: ClickEffectLevel.LIGHT })
-    // .animation({ duration: 300 }
+    Column({ space: 10 }) {
+      // SymbolGlyph($r('sys.symbol.beido'))
+      // SymbolGlyph($r('sys.symbol.'.concat(this.symbol.name)))
+      //   .fontColor([$r('app.color.font_color_title')])
+      Text(this.symbol.char)
+        .fontColor($r('app.color.font_color_title'))
+        .width(50)
+        .height(50)
+        .fontWeight(this.fontWeight)
+        .fontSize(50)
+        .clickEffect({ level: ClickEffectLevel.LIGHT })
+        .onClick(() => {
+          this.selected = this.symbol;
+        })
+    }
+
   }
 }
 

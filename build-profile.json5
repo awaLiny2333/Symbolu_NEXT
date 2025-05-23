@@ -1,6 +1,20 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\meowDUO\\.ohos\\config\\default_Symbolu_NEXT_KuHbscXQ0CkpQmKY_tQNnuJCRoEROqJK4hBJLDYq3Ms=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B21228E84D53029C02B3CAB527551F4AC5DF38D52969270B1A441DF79F9BAE8623CC6B3770BBFB5",
+          "profile": "C:\\Users\\meowDUO\\.ohos\\config\\default_Symbolu_NEXT_KuHbscXQ0CkpQmKY_tQNnuJCRoEROqJK4hBJLDYq3Ms=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\meowDUO\\.ohos\\config\\default_Symbolu_NEXT_KuHbscXQ0CkpQmKY_tQNnuJCRoEROqJK4hBJLDYq3Ms=.p12",
+          "storePassword": "0000001BC8D24D84DC97076C8CA83400CCC0945EE4C9D702D844AF7E53359902A04E13E3B6241C2B28E96C"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",

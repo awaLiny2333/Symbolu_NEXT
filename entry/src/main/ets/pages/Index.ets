@@ -78,7 +78,7 @@ struct Index {
     let searchResult: linysSymbol[] = [];
     for (let index = 0; index < allSymbols.length; index++) {
       const element = allSymbols[index];
-      if (element.name.includes(key)) {
+      if (element.name.toUpperCase().includes(key.toUpperCase())) {
         searchResult.push(element);
       }
     }

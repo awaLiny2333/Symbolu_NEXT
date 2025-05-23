@@ -36,16 +36,18 @@ struct Index {
       .rowsGap(15)
       .scrollBar(BarState.On)
 
-      Row({ space: 10 }) {
-        Row() {
+      Scroll() {
+        Row({ space: 10 }) {
           LinysCapsuleButton({ text: "No. " + this.selected.id.toString() })
-        }.layoutWeight(1)
-
-        LinysCapsuleButton({ text: " " + this.selected.char + " ", fontSize: 26 })
-        LinysCapsuleButton({ text: this.selected.unicode })
-        LinysCapsuleButton({ text: this.selected.name })
-      } // Operations
+          LinysCapsuleButton({ text: " " + this.selected.char + " ", fontSize: 26 })
+          LinysCapsuleButton({ text: this.selected.unicode })
+          LinysCapsuleButton({ text: this.selected.name })
+        } // Operations
+      }
       .width('100%')
+      .scrollable(ScrollDirection.Horizontal)
+      .scrollBar(BarState.Off)
+      .edgeEffect(EdgeEffect.Spring)
 
       Row({ space: 10 }) {
         TextInput({ text: this.inputText })// Search Blank

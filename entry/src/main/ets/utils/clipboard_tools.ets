@@ -10,9 +10,3 @@ export function copy(content: string) {
     console.error('Failed to set PasteData. Cause: ' + err.message);
   });
 }
-
-// export async function read_first_of_board() {
-//   let systemPasteboard: pasteboard.SystemPasteboard = pasteboard.getSystemPasteboard();
-//   let text: string = (await systemPasteboard.getData()).getPrimaryText();
-//   return text;
-// }

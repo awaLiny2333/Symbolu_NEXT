@@ -1,6 +1,8 @@
-import { allSymbols, linysSymbol } from '../objects/linysSymbol';
+import LinysCapsuleButton from '../components/LinysCapsuleButton';
+import LinysSymbolDisplay from '../components/LinysSymbolDisplay';
+import { allSymbols } from '../data/allSymbols';
+import { linysSymbol } from '../objects/linysSymbol';
 import LinysSymbolDataSource from '../objects/SymbolDataSource';
-import { copy } from '../utils/clipboard_tools';
 
 @Entry
 @Component
@@ -91,61 +93,5 @@ struct Index {
     this.screen_width = n.width as number;
     this.screen_height = n.height as number;
     this.tablet_mode = this.screen_width > 500;
-  }
-}
-
-@Component
-struct LinysSymbolDisplay {
-  @Prop symbol: linysSymbol;
-  @Link selected: linysSymbol;
-  // Colors
-  @Prop colors: ResourceColor = $r('app.color.font_color_title');
-  @Prop fontWeight: FontWeight = FontWeight.Normal;
-
-  build() {
-    Column({ space: 10 }) {
-      // SymbolGlyph($r('sys.symbol.beido'))
-      // SymbolGlyph($r('sys.symbol.'.concat(this.symbol.name)))
-      //   .fontColor([$r('app.color.font_color_title')])
-      Text(this.symbol.char)
-        .fontColor($r('app.color.font_color_title'))
-        .width(50)
-        .height(50)
-        .fontWeight(this.fontWeight)
-        .fontSize(50)
-        .clickEffect({ level: ClickEffectLevel.LIGHT })
-        .onClick(() => {
-          this.selected = this.symbol;
-        })
-    }
-
-  }
-}
-
-@Component
-struct LinysCapsuleButton {
-  @Prop text: ResourceStr = "   ";
-  @Prop fontSize: number = 22;
-  @Prop allowCopy: boolean = true;
-
-  aboutToAppear(): void {
-    // Preprocess of text
-    this.text = this.text == "" ? "¯\\_(ツ)_/¯" : this.text;
-  }
-
-  build() {
-    Button(this.text)
-      .type(ButtonType.Capsule)
-      .backgroundColor($r('app.color.block_color'))
-      .fontColor($r('app.color.font_color_title'))
-      .fontSize(this.fontSize)
-      .fontWeight(FontWeight.Medium)
-      .backgroundColor($r('app.color.block_color'))
-      .clickEffect({ level: ClickEffectLevel.LIGHT })
-      .onClick(() => {
-        if (this.allowCopy && typeof this.text == "string") {
-          copy(this.text as string);
-        }
-      })
   }
 }

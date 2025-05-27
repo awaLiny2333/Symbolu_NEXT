@@ -28,7 +28,7 @@ def print_font_glyphs(font_path):
 
     font.close()
 
-    return 'export const allSymbols: linysSymbol[] = \n[\n' + ',\n'.join(result) + '\n]'
+    return 'import { linysSymbol } from "./linysSymbol";\n\nexport const allSymbols: linysSymbol[] = \n[\n' + ',\n'.join(result) + '\n]'
 
 
 if __name__ == "__main__":
@@ -38,6 +38,6 @@ if __name__ == "__main__":
 
     fpath = sys.argv[1]
 
-    fout = open('HMSymbolVF.txt', 'w', encoding='utf-8')
+    fout = open('allSymbols.ets', 'w', encoding='utf-8')
     fout.write(print_font_glyphs(fpath))
     fout.close()

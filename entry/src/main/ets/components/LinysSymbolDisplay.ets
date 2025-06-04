@@ -4,21 +4,22 @@ import { linysSymbol } from '../objects/linysSymbol';
 struct LinysSymbolDisplay {
   @Prop symbol: linysSymbol;
   @Link selected: linysSymbol;
+  @Prop fontSize: number = 50;
   // Colors
-  @Prop colors: ResourceColor = $r('app.color.font_color_title');
-  @Prop fontWeight: FontWeight = FontWeight.Normal;
+  @Prop colors: ResourceColor = $r("app.color.accent");
+  @StorageProp('symbolFontWeight') symbolFontWeight: number = 200;
 
   build() {
     Column({ space: 10 }) {
       // SymbolGlyph($r('sys.symbol.beido'))
-      // SymbolGlyph($r('sys.symbol.'.concat(this.symbol.name)))
-      //   .fontColor([$r('app.color.font_color_title')])
-      Text(this.symbol.char)
-        .fontColor($r('app.color.font_color_title'))
-        .width(50)
-        .height(50)
-        .fontWeight(this.fontWeight)
-        .fontSize(50)
+      SymbolGlyph($r('sys.symbol.'.concat(this.symbol.name)))
+        .fontColor([$r("app.color.accent")])
+      // Text(this.symbol.char)
+      //   .fontColor($r('app.color.font_color_title'))
+        .width(this.fontSize)
+        .height(this.fontSize)
+        .fontWeight(this.symbolFontWeight)
+        .fontSize(this.fontSize)
         .clickEffect({ level: ClickEffectLevel.LIGHT })
         .onClick(() => {
           this.selected = this.symbol;

@@ -5,11 +5,11 @@
       "value": "#FFFFFF"
     },
     {
-      "name": "block_color",
+      "name": "supplementary",
       "value": "#FFCDD1D7"
     },
     {
-      "name": "font_color_title",
+      "name": "accent",
       "value": "#FF11182F"
     }
   ]

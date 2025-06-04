@@ -14,11 +14,11 @@ struct LinysCapsuleButton {
   build() {
     Button(this.text)
       .type(ButtonType.Capsule)
-      .backgroundColor($r('app.color.block_color'))
-      .fontColor($r('app.color.font_color_title'))
+      .backgroundColor($r("app.color.supplementary"))
+      .fontColor($r("app.color.accent"))
       .fontSize(this.fontSize)
       .fontWeight(FontWeight.Medium)
-      .backgroundColor($r('app.color.block_color'))
+      .backgroundColor($r("app.color.supplementary"))
       .clickEffect({ level: ClickEffectLevel.LIGHT })
       .onClick(() => {
         if (this.allowCopy && typeof this.text == "string") {

@@ -476,7 +476,7 @@ export const allSymbols: linysSymbol[] = [new linysSymbol(" ", "U+000020", "spac
   new linysSymbol("󰇟", "U+0F01DF", "line_below_seal", 473),
   new linysSymbol("󰇠", "U+0F01E0", "heart_circle_fill", 474),
   new linysSymbol("󰇡", "U+0F01E1", "search_things", 475),
-  new linysSymbol("󰇢", "U+0F01E2", "kmark_on_bookmark", 476),
+  new linysSymbol("󰇢", "U+0F01E2", "bookmark_on_bookmark", 476),
   new linysSymbol("󰇣", "U+0F01E3", "line_below_character_slash", 477),
   new linysSymbol("󰇤", "U+0F01E4", "line_below_character", 478),
   new linysSymbol("󰇥", "U+0F01E5", "rectangle_portrait_badge_plus", 479),

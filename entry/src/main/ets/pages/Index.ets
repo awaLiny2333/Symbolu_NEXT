@@ -4,7 +4,7 @@ import { allSymbols } from '../data/allSymbols';
 import { animationDefault } from '../data/animationDefault';
 import { linysSymbol } from '../objects/linysSymbol';
 import LinysSymbolDataSource from '../objects/SymbolDataSource';
-import { LengthMetrics } from '@kit.ArkUI';
+import { ItemRestriction, LengthMetrics, SegmentButton, SegmentButtonOptions, SegmentButtonTextItem } from '@kit.ArkUI';
 
 @Entry
 @Component
@@ -63,8 +63,8 @@ struct Index {
       })
 
       Operations({ showMore: this.showMore })
-        .width(this.tablet_mode ? (this.showMore ? '35%' : 50) : '100%')
-        .height(this.tablet_mode ? undefined : (this.showMore ? '60%' : 25))
+        .width(this.tablet_mode ? (this.showMore ? '40%' : 50) : '100%')
+        .height(this.tablet_mode ? undefined : (this.showMore ? '60%' : 30))
         .animation(animationDefault())
         .id('operations')
         .alignRules(this.tablet_mode ?
@@ -188,6 +188,16 @@ struct Operations {
   @StorageProp('space') space: number = 10;
   // UI
   @Link showMore: boolean;
+  @State colorOptions: SegmentButtonOptions = SegmentButtonOptions.tab({
+    buttons: [{ text: '󰦜' }, { text: '󰘱' }, { text: '󰘔' },] as ItemRestriction<SegmentButtonTextItem>,
+    fontColor: $r('app.color.accent'),
+    selectedFontColor: $r('app.color.supplementary'),
+    selectedBackgroundColor: $r('app.color.accent'),
+    fontSize: 24,
+    selectedFontSize: 24,
+  })
+  @State @Watch('onSymbolRenderingStrategySelect') symbolRenderingStrategySelectedIndices: number[] = [0];
+  @State onSymbolRenderingStrategy: number = 0;
   // Symbol
   @StorageLink('symbolFontWeight') symbolFontWeight: number = 200;
 
@@ -196,7 +206,7 @@ struct Operations {
       Text(this.tablet_mode ? (this.showMore ? '󰃙' : '󰃚') : (this.showMore ? '󰃛' : '󰃘'))// Hide / Show button
         .fontColor($r("app.color.accent"))
         .textAlign(this.tablet_mode ? TextAlign.Start : TextAlign.Center)
-        .fontSize(30)
+        .fontSize(40)
         .clickEffect({ level: ClickEffectLevel.LIGHT })
         .width('100%')
         .onClick(() => {
@@ -226,6 +236,12 @@ struct Operations {
               })
           } // FontWeight slider
           Text(this.fontWeightIndicator())
+            .fontSize(20)
+            .fontColor($r("app.color.accent"))
+            .fontWeight(this.symbolFontWeight)
+          Row() // For spacing
+          SegmentButton({ options: this.colorOptions, selectedIndexes: this.symbolRenderingStrategySelectedIndices })
+          Text(this.symbolRenderingStrategyIndicator())
             .fontSize(20)
             .fontColor($r("app.color.accent"))
         }
@@ -263,5 +279,25 @@ struct Operations {
         break;
     }
     return extra || this.symbolFontWeight.toString();
+  }
+
+  onSymbolRenderingStrategySelect() {
+    this.onSymbolRenderingStrategy = this.symbolRenderingStrategySelectedIndices[0];
+  }
+
+  symbolRenderingStrategyIndicator() {
+    let extra: string = 'SINGLE';
+    switch (this.onSymbolRenderingStrategy) {
+      case 0:
+        extra = 'SINGLE';
+        break;
+      case 1:
+        extra = 'MULTIPLE_COLOR';
+        break;
+      case 2:
+        extra = 'MULTIPLE_OPACITY';
+        break;
+    }
+    return extra;
   }
 }

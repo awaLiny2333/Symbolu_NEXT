@@ -4,7 +4,8 @@ import { allSymbols } from '../data/allSymbols';
 import { animationDefault } from '../data/animationDefault';
 import { linysSymbol } from '../objects/linysSymbol';
 import LinysSymbolDataSource from '../objects/SymbolDataSource';
-import { ItemRestriction, LengthMetrics, SegmentButton, SegmentButtonOptions, SegmentButtonTextItem } from '@kit.ArkUI';
+import { ItemRestriction, SegmentButton, SegmentButtonOptions, SegmentButtonTextItem } from '@kit.ArkUI';
+import LinysColors from '../components/LinysColors';
 
 @Entry
 @Component
@@ -22,11 +23,11 @@ struct Index {
   @State waterFlowWidth: number = 0;
   @State scrollInfoHeight: number = 0;
   @State showMore: boolean = false;
-  flexSpace: FlexSpaceOptions = { main: LengthMetrics.vp(this.space), cross: LengthMetrics.vp(this.space) };
   // Data
   data: LinysSymbolDataSource = new LinysSymbolDataSource(allSymbols);
   // Symbols
   @StorageLink('symbolFontWeight') symbolFontWeight: number = 400;
+  @StorageLink('symbolBackgroundColor') colorBackground: ResourceColor | undefined = undefined;
 
   build() {
     RelativeContainer() {
@@ -40,12 +41,14 @@ struct Index {
           return s.unicode;
         })
       } // Symbols
+      .id('symbols')
       .columnsTemplate(this.columnsTemplate())
-      .columnsGap(15)
-      .rowsGap(15)
+      .backgroundColor(this.colorBackground)
+      .padding(this.space)
+      .columnsGap(this.space)
+      .rowsGap(this.space)
       .edgeEffect(EdgeEffect.Spring)
       .borderRadius(20)
-      .id('symbols')
       .alignRules(this.tablet_mode ?
         {
           top: { anchor: '__container__', align: VerticalAlign.Top },
@@ -59,14 +62,14 @@ struct Index {
         })
       .animation(animationDefault())
       .onAreaChange((_o, n) => {
-        this.waterFlowWidth = n.width as number;
+        this.waterFlowWidth = n.width as number - this.space * 2;
       })
 
       Operations({ showMore: this.showMore })
+        .id('operations')
         .width(this.tablet_mode ? (this.showMore ? '40%' : 50) : '100%')
         .height(this.tablet_mode ? undefined : (this.showMore ? '60%' : 30))
         .animation(animationDefault())
-        .id('operations')
         .alignRules(this.tablet_mode ?
           {
             top: { anchor: '__container__', align: VerticalAlign.Top },
@@ -107,8 +110,8 @@ struct Index {
             this.searchFor('');
           })
       } // Search
-      .padding({ top: this.space })
       .id('search')
+      .padding({ top: this.space })
       .alignRules(this.tablet_mode ?
         {
           bottom: { anchor: '__container__', align: VerticalAlign.Bottom },
@@ -153,7 +156,7 @@ struct Index {
   }
 
   columnsTemplate() {
-    return "1fr ".repeat(Math.ceil(this.waterFlowWidth / 65));
+    return "1fr ".repeat(Math.floor(this.waterFlowWidth / 55));
   }
 }
 
@@ -196,10 +199,15 @@ struct Operations {
     fontSize: 24,
     selectedFontSize: 24,
   })
-  @State @Watch('onSymbolRenderingStrategySelect') symbolRenderingStrategySelectedIndices: number[] = [0];
-  @State onSymbolRenderingStrategy: number = 0;
+  @State @Watch('onSymbolRenderingStrategySelect') symbolRenderingStrategySelectedIndices: number[] = [1];
+  // Color
+  @State @Watch('onColorChange') colorPrimary: ResourceColor = $r("app.color.accent");
+  @State @Watch('onColorChange') colorSecondary: ResourceColor = $r("sys.color.ohos_id_color_connected");
+  @StorageLink('symbolBackgroundColor') colorBackground: ResourceColor | undefined = undefined;
   // Symbol
+  @StorageLink('symbolRenderingStrategy') symbolRenderingStrategy: number = 1;
   @StorageLink('symbolFontWeight') symbolFontWeight: number = 200;
+  @StorageLink('symbolColors') symbolColors: ResourceColor[] = [this.colorPrimary, this.colorSecondary];
 
   build() {
     Column({ space: this.space }) {
@@ -235,20 +243,34 @@ struct Operations {
                 this.symbolFontWeight = value;
               })
           } // FontWeight slider
-          Text(this.fontWeightIndicator())
-            .fontSize(20)
-            .fontColor($r("app.color.accent"))
-            .fontWeight(this.symbolFontWeight)
+          LinysCapsuleButton({
+            text: this.fontWeightIndicator(),
+            copyFormat: this.fontWeightIndicator().includes('0') ? '.fontWeight(%k)' : '.fontWeight(FontWeight.%k)'
+          })
           Row() // For spacing
           SegmentButton({ options: this.colorOptions, selectedIndexes: this.symbolRenderingStrategySelectedIndices })
-          Text(this.symbolRenderingStrategyIndicator())
-            .fontSize(20)
-            .fontColor($r("app.color.accent"))
+          LinysCapsuleButton({ text: this.symbolRenderingStrategyIndicator(),copyFormat:'.renderingStrategy(SymbolRenderingStrategy.%k)' })
+          LinysColors({
+            colorSelected: this.colorPrimary,
+            colorDefault: $r('app.color.accent'),
+            descDefault: 'accent'
+          })
+          LinysColors({
+            colorSelected: this.colorSecondary,
+            colorDefault: $r('sys.color.ohos_id_color_connected'),
+            descDefault: 'connected'
+          })
+          LinysColors({
+            colorSelected: this.colorBackground,
+            colorDefault: undefined,
+            descDefault: 'background',
+          })
         }
         .alignItems(HorizontalAlign.End)
         .visibility(this.showMore ? Visibility.Visible : Visibility.Hidden)
         .animation(animationDefault())
       } // Body
+      .borderRadius(20)
       .align(Alignment.Top)
       .width('100%')
       .layoutWeight(1)
@@ -266,7 +288,7 @@ struct Operations {
         extra = 'Lighter';
         break;
       case 400:
-        extra = 'Regular / Normal';
+        extra = 'Regular';
         break;
       case 500:
         extra = 'Medium';
@@ -282,12 +304,12 @@ struct Operations {
   }
 
   onSymbolRenderingStrategySelect() {
-    this.onSymbolRenderingStrategy = this.symbolRenderingStrategySelectedIndices[0];
+    this.symbolRenderingStrategy = this.symbolRenderingStrategySelectedIndices[0];
   }
 
   symbolRenderingStrategyIndicator() {
     let extra: string = 'SINGLE';
-    switch (this.onSymbolRenderingStrategy) {
+    switch (this.symbolRenderingStrategy) {
       case 0:
         extra = 'SINGLE';
         break;
@@ -299,5 +321,9 @@ struct Operations {
         break;
     }
     return extra;
+  }
+
+  onColorChange() {
+    this.symbolColors = [this.colorPrimary, this.colorSecondary];
   }
 }

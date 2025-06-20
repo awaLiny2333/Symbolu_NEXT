@@ -67,7 +67,7 @@ struct Index {
 
       Operations({ showMore: this.showMore })
         .id('operations')
-        .width(this.tablet_mode ? (this.showMore ? '40%' : 50) : '100%')
+        .width(this.tablet_mode ? (this.showMore ? 300 : 50) : '100%')
         .height(this.tablet_mode ? undefined : (this.showMore ? '60%' : 30))
         .animation(animationDefault())
         .alignRules(this.tablet_mode ?
@@ -127,7 +127,7 @@ struct Index {
       left: 15,
       right: 15,
       top: 5,
-      // bottom: 15
+      bottom: 15
     })
     .height('100%')
     .width('100%')
